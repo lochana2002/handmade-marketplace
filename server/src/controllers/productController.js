@@ -5,11 +5,11 @@ const Product = require("../models/Product");
 // ===============================
 exports.createProduct = async (req, res) => {
   try {
-    const {
+   const {
 title,
 description,
 price,
-image,
+images,
 category,
 stock,
 featured
@@ -21,16 +21,25 @@ featured
       });
     }
 
-    const product = await Product.create({
+   const product = await Product.create({
 
 title,
+
 description,
+
 price:Number(price),
-image,
+
+
+images,
+
+
 category,
+
 stock:Number(stock)||1,
 
+
 featured: featured || false,
+
 
 seller:req.user._id
 
@@ -147,23 +156,15 @@ exports.getProducts = async (req, res) => {
         sortOption.createdAt = -1;
     }
 
-    const pageNumber = Number(page);
-    const pageSize = Number(limit);
+const products = await Product.find(query)
+  .populate("seller", "name email")
+  .sort(sortOption);   
 
-    const totalProducts = await Product.countDocuments(query);
+  res.json({
+  totalProducts: products.length,
+  products,
+});
 
-    const products = await Product.find(query)
-      .populate("seller", "name email")
-      .sort(sortOption)
-      .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize);
-
-    res.json({
-      totalProducts,
-      totalPages: Math.ceil(totalProducts / pageSize),
-      currentPage: pageNumber,
-      products,
-    });
   } catch (error) {
     console.error(error);
 
@@ -267,15 +268,14 @@ exports.updateProduct = async (req, res) => {
 
 
     product.title = req.body.title;
-    product.description = req.body.description;
-    product.price = Number(req.body.price);
-    product.image = req.body.image;
-    product.category = req.body.category;
-    product.stock = Number(req.body.stock);
+product.description = req.body.description;
+product.price = Number(req.body.price);
+product.images = req.body.images;
+product.category = req.body.category;
+product.stock = Number(req.body.stock);
+product.featured = req.body.featured;
 
-
-
-    await product.save();
+await product.save();
 
 
 
