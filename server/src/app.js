@@ -34,10 +34,16 @@ const allowedOrigins = [
 ];
 
 
+if(process.env.CLIENT_URL){
+    allowedOrigins.push(process.env.CLIENT_URL);
+}
+
 app.use(
     cors({
+
         origin: function(origin, callback){
 
+            // Allow Postman, mobile apps, server requests
             if(!origin){
                 return callback(null, true);
             }
@@ -53,7 +59,9 @@ app.use(
             );
 
         },
+
         credentials:true
+
     })
 );
 
