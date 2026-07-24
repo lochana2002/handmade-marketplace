@@ -27,7 +27,7 @@ import AddProduct from "./pages/AddProduct";
 import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
 import AdminRoute from "./routes/AdminRoute";
-import AdminLayout from "./components/Admin/AdminLayout";
+import AdminLayout from "./components/admin/AdminLayout";
 
 import AdminProducts from "./pages/admin/Products";
 import Users from "./pages/admin/Users";
