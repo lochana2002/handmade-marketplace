@@ -13,7 +13,7 @@ const reviewRoutes = require("./routes/reviewRoutes");
 
 const adminRoutes = require("./routes/adminRoutes");
 const statsRoutes = require("./routes/statsRoutes")
-const contactRoutes = require("./routes/contactRoutes");;
+const contactRoutes = require("./routes/contactRoutes");
 
 const aiRoutes = require("./routes/aiRoutes");
 
@@ -28,13 +28,14 @@ const app = express();
 /* Middleware */
 
 app.use(
-cors({
-    origin:[
-        "http://localhost:5173",
-        "http://localhost:5174"
-    ],
-    credentials:true
-})
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "http://localhost:5174",
+            process.env.CLIENT_URL
+        ],
+        credentials: true
+    })
 );
 
 app.use(express.json());
