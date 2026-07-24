@@ -12,7 +12,8 @@ const sellerRoutes = require("./routes/sellerRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 
 const adminRoutes = require("./routes/adminRoutes");
-const statsRoutes = require("./routes/statsRoutes");
+const statsRoutes = require("./routes/statsRoutes")
+const contactRoutes = require("./routes/contactRoutes");;
 
 const aiRoutes = require("./routes/aiRoutes");
 
@@ -107,6 +108,8 @@ app.use(
 "/api/ai",
 aiRoutes
 );
+
+app.use("/api/contact", contactRoutes);
 
 
 
