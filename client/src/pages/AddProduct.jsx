@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 
+import { uploadProductImage } from "../services/uploadApi";
+
 import {
   FaImage,
   FaPlusCircle,
@@ -21,7 +23,7 @@ const [form, setForm] = useState({
   title: "",
   description: "",
   price: "",
-  images: ["", "", ""],
+  images:[],
   category: "",
   stock: "",
   featured: false,
@@ -42,8 +44,9 @@ setForm({
 };
 
 
-  const [loading,setLoading] = useState(false);
 
+  const [loading,setLoading] = useState(false);
+  const [uploading,setUploading] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -117,7 +120,67 @@ setForm({
 
   };
 
+const handleFileUpload = async(e)=>{
 
+try{
+
+setUploading(true);
+
+
+const files = Array.from(
+    e.target.files
+);
+
+
+const uploadedUrls = [];
+
+
+for(const file of files){
+
+
+const url = await uploadProductImage(file);
+
+
+uploadedUrls.push(url);
+
+
+}
+
+
+setForm({
+
+...form,
+
+images:[
+...form.images,
+...uploadedUrls
+]
+
+});
+
+
+}
+catch(error){
+
+console.log(
+"UPLOAD ERROR:",
+error.response?.data || error.message
+);
+
+
+alert(
+"Image upload failed"
+);
+
+
+}
+finally{
+
+setUploading(false);
+
+}
+
+};
 
 
 
@@ -177,11 +240,44 @@ setForm({
        
 
       }
-      navigate("/products", {
-  state: {
-    success: "Product added successfully!",
-  },
-});
+     
+      if(isEditMode){
+
+    await api.put(
+        `/products/${id}`,
+        form,
+        {
+          headers:{
+            Authorization:`Bearer ${token}`
+          }
+        }
+    );
+
+
+    alert("Product updated successfully");
+
+
+}
+else{
+
+
+    await api.post(
+        "/products",
+        form,
+        {
+          headers:{
+            Authorization:`Bearer ${token}`
+          }
+        }
+    );
+
+
+    alert("Product added successfully");
+
+}
+
+
+navigate("/seller/dashboard");
 
     }catch(err){
 
@@ -557,44 +653,48 @@ setForm({
 
 <div>
 
-<label className="
-font-semibold
-">
+<div>
+
+<label className="font-semibold">
 Product Images
 </label>
 
-{
-form.images.map((img,index)=>(
-
-<div key={index} className="mt-3">
 
 <input
 
-value={img}
+type="file"
 
-onChange={(e)=>
-handleImageChange(
-index,
-e.target.value
-)
-}
+multiple
 
-placeholder={`Image ${index+1} URL`}
+accept="image/*"
+
+onChange={handleFileUpload}
 
 className="
+mt-3
 w-full
 border
 rounded-xl
 px-5
 py-3
-focus:ring-2
-focus:ring-orange-400
 "
 
 />
+
+
 </div>
-))
-}
+
+<div className="
+grid
+grid-cols-3
+gap-4
+mt-5
+">
+
+
+
+
+</div>
 
 </div>
           {/* IMAGE PREVIEW */}
@@ -646,7 +746,7 @@ border
 
           type="submit"
 
-          disabled={loading}
+          disabled={loading || uploading}
 
           className="
             w-full
@@ -672,16 +772,20 @@ border
             <FaBoxOpen/>
 
 
-            {
- loading
- ?
- "Saving..."
- :
- isEditMode
- ?
- "Update Product"
- :
- "Create Product"
+        {
+uploading
+?
+"Uploading Images..."
+:
+loading
+?
+"Saving..."
+:
+isEditMode
+?
+"Update Product"
+:
+"Create Product"
 }
 
 
