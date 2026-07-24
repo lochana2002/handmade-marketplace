@@ -1,43 +1,129 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-// Protect route (authentication)
-const protect = async (req, res, next) => {
-  let token;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    try {
-      token = req.headers.authorization.split(" ")[1];
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+const protect = async(req,res,next)=>{
 
-      req.user = await User.findById(decoded.id).select("-password");
-      console.log("Authenticated user:", req.user._id, req.user.role);
 
-      next();
-    } catch (error) {
-      return res.status(401).json({ message: "Not authorized, token failed" });
-    }
-  }
+try{
 
-  if (!token) {
-    return res.status(401).json({ message: "Not authorized, no token" });
-  }
+
+let token;
+
+
+
+if(
+req.headers.authorization &&
+req.headers.authorization.startsWith("Bearer")
+){
+
+
+token =
+req.headers.authorization.split(" ")[1];
+
+
+const decoded =
+jwt.verify(
+token,
+process.env.JWT_SECRET
+);
+
+
+
+req.user =
+await User.findById(
+decoded.id
+)
+.select("-password");
+
+
+
+if(!req.user){
+
+return res.status(401).json({
+
+message:"User not found"
+
+});
+
+}
+
+
+
+next();
+
+
+
+}
+else{
+
+
+return res.status(401).json({
+
+message:"No token provided"
+
+});
+
+
+}
+
+
+
+}catch(error){
+
+
+return res.status(401).json({
+
+message:"Token failed"
+
+});
+
+
+}
+
+
 };
 
-// Role-based access middleware
-const authorizeRoles = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({
-        message: `Role ${req.user.role} is not allowed to access this route`,
-      });
-    }
-    next();
-  };
+
+
+
+
+
+const authorizeRoles =
+(...roles)=>{
+
+
+return(req,res,next)=>{
+
+
+if(!roles.includes(req.user.role)){
+
+
+return res.status(403).json({
+
+message:"Access denied"
+
+});
+
+
+}
+
+
+next();
+
+
 };
 
-module.exports = { protect, authorizeRoles };
+
+};
+
+
+
+module.exports={
+
+protect,
+
+authorizeRoles
+
+};
