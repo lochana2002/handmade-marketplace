@@ -30,16 +30,31 @@ function Testimonials() {
   return (
 
     <section className="
-      py-24
-      bg-white
-    ">
+relative
+py-20
+bg-cover
+bg-center
+"
+style={{
+backgroundImage:
+"url('https://www.rofi.lk/blog/wp-content/uploads/2025/03/Artisan-Market-Filled-with-Handcrafted-Goods-and-Vibrant-Culture.jpg')"
+}}
+>
+
+<div className="
+absolute
+inset-0
+bg-white/20
+">
+</div>
 
 
-      <div className="
-        max-w-6xl
-        mx-auto
-        px-6
-      ">
+<div className="
+relative
+max-w-6xl
+mx-auto
+px-6
+">
 
 
         {/* HEADER */}
