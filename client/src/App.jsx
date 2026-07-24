@@ -35,7 +35,6 @@ import AdminOrders from "./pages/admin/Orders";
 import Categories from "./pages/admin/Categories";
 import Settings from "./pages/admin/Settings";
 
-// AI
 import AIChat from "./components/AIChat";
 
 
@@ -50,78 +49,81 @@ return (
 
 {/* Public */}
 
-<Route 
-path="/" 
-element={<Home />} 
+<Route
+path="/"
+element={<Home />}
 />
 
-<Route 
-path="/about" 
-element={<About />} 
+<Route
+path="/about"
+element={<About />}
 />
 
-<Route 
-path="/contact" 
-element={<Contact />} 
+<Route
+path="/contact"
+element={<Contact />}
 />
+
 
 
 {/* Authentication */}
 
-<Route 
-path="/login" 
-element={<Login />} 
+<Route
+path="/login"
+element={<Login />}
 />
 
-<Route 
-path="/register" 
-element={<Register />} 
+<Route
+path="/register"
+element={<Register />}
 />
+
 
 
 {/* Customer */}
 
-<Route 
-path="/products" 
-element={<Products />} 
+<Route
+path="/products"
+element={<Products />}
 />
 
-<Route 
-path="/products/:id" 
-element={<ProductDetails />} 
+<Route
+path="/products/:id"
+element={<ProductDetails />}
 />
 
-<Route 
-path="/cart" 
-element={<Cart />} 
+<Route
+path="/cart"
+element={<Cart />}
 />
 
-<Route 
-path="/checkout" 
-element={<Checkout />} 
+<Route
+path="/checkout"
+element={<Checkout />}
 />
 
-<Route 
-path="/orders" 
-element={<Orders />} 
+<Route
+path="/orders"
+element={<Orders />}
 />
 
-<Route 
-path="/profile" 
-element={<Profile />} 
+<Route
+path="/profile"
+element={<Profile />}
 />
+
 
 
 {/* Seller */}
 
-<Route 
-path="/seller/dashboard" 
-element={<Seller />} 
+<Route
+path="/seller/dashboard"
+element={<Seller />}
 />
 
-<Route 
-path="/seller/add-product" 
-element={<AddProduct />} 
+<Route
+path="/seller/add-product"
+element={<AddProduct />}
 />
 
 <Route
@@ -140,7 +142,7 @@ element={<AdminLogin />}
 
 
 
-{/* Admin Panel */}
+{/* Admin */}
 
 <Route
 path="/admin"
@@ -151,9 +153,9 @@ element={
 }
 >
 
-<Route 
-index 
-element={<Admin />} 
+<Route
+index
+element={<Admin />}
 />
 
 <Route
