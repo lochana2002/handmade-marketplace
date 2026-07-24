@@ -1,83 +1,248 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
+const Category = require("../models/Category");
 
+
+// Dashboard Statistics
 exports.getAdminStats = async (req, res) => {
-  try {
-    const users = await User.countDocuments();
 
-    const products = await Product.countDocuments();
+    try {
 
-    const orders = await Order.countDocuments();
+        const totalUsers =
+            await User.countDocuments();
 
-    const revenueData = await Order.aggregate([
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$totalPrice" },
-        },
-      },
-    ]);
 
-    const revenue =
-      revenueData.length > 0
-        ? revenueData[0].total
-        : 0;
+        const buyers =
+            await User.countDocuments({
+                role: "buyer"
+            });
 
-    res.json({
-      users,
-      products,
-      orders,
-      revenue,
-    });
 
-  } catch (err) {
+        const sellers =
+            await User.countDocuments({
+                role: "seller"
+            });
 
-    res.status(500).json({
-      message: err.message,
-    });
 
-  }
-};
+        const products =
+            await Product.countDocuments();
 
-const Order = require("../models/Order");
 
-// Get all orders
-exports.getAllOrders = async (req, res) => {
-  try {
-    const orders = await Order.find()
-      .populate("buyer", "name email")
-      .populate("items.product", "title image price");
+        const orders =
+            await Order.countDocuments();
 
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
-  }
-};
 
-// Update order status
-exports.updateOrderStatus = async (req, res) => {
-  try {
-    const { orderStatus } = req.body;
+        const revenue =
+            await Order.aggregate([
+                {
+                    $group:{
+                        _id:null,
+                        total:{
+                            $sum:"$total"
+                        }
+                    }
+                }
+            ]);
 
-    const order = await Order.findById(req.params.id);
 
-    if (!order) {
-      return res.status(404).json({
-        message: "Order not found",
-      });
+
+        res.json({
+
+            totalUsers,
+
+            buyers,
+
+            sellers,
+
+            products,
+
+            orders,
+
+            revenue:
+            revenue[0]?.total || 0
+
+        });
+
+
+
+    } catch(error){
+
+        res.status(500).json({
+            message:error.message
+        });
+
     }
 
-    order.orderStatus = orderStatus;
+};
 
-    await order.save();
 
-    res.json(order);
-  } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
-  }
+
+
+// GET ALL USERS
+exports.getUsers = async (req, res) => {
+
+    try {
+
+        const users = await User.find()
+            .select("-password")
+            .sort({
+                createdAt:-1
+            });
+
+
+        res.json(users);
+
+
+    } catch(error) {
+
+        res.status(500).json({
+            message:error.message
+        });
+
+    }
+
+};
+
+
+
+
+// GET ALL SELLERS
+exports.getSellers = async (req, res) => {
+
+    try {
+
+
+        const sellers =
+            await User.find({
+                role:"seller"
+            })
+            .select("-password")
+            .sort({
+                createdAt:-1
+            });
+
+
+
+        res.json(sellers);
+
+
+
+    } catch(error){
+
+
+        res.status(500).json({
+            message:error.message
+        });
+
+
+    }
+
+};
+
+
+
+
+// GET ALL PRODUCTS
+exports.getProducts = async (req,res)=>{
+
+    try {
+
+
+        const products =
+            await Product.find()
+            .populate(
+                "seller",
+                "name email"
+            )
+            .sort({
+                createdAt:-1
+            });
+
+
+
+        res.json(products);
+
+
+
+    } catch(error){
+
+
+        res.status(500).json({
+            message:error.message
+        });
+
+
+    }
+
+};
+
+
+
+exports.getCategories = async(req,res)=>{
+
+try{
+
+
+const categories =
+await Category.find()
+.sort({
+createdAt:-1
+});
+
+
+res.json(categories);
+
+
+}
+catch(error){
+
+res.status(500).json({
+message:error.message
+});
+
+}
+
+
+};
+
+// GET ALL ORDERS
+exports.getOrders = async(req,res)=>{
+
+    try{
+
+
+        const orders =
+            await Order.find()
+
+            .populate(
+                "buyer",
+                "name email"
+            )
+
+            .populate(
+                "items.product",
+                "title price"
+            )
+
+            .sort({
+                createdAt:-1
+            });
+
+
+
+        res.json(orders);
+
+
+
+    } catch(error){
+
+
+        res.status(500).json({
+            message:error.message
+        });
+
+
+    }
+
 };
