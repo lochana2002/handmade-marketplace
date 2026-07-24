@@ -11,10 +11,47 @@ import {
 
 import FAQ from "../components/FAQ";
 import AnimatedSection from "../components/animations/AnimatedSection";
-
+import { useState } from "react";
+import { sendMessage } from "../services/contactApi";
 
 function Contact() {
 
+  const [form, setForm] = useState({
+  name: "",
+  email: "",
+  subject: "",
+  message: "",
+});
+
+const handleChange = (e) => {
+  setForm({
+    ...form,
+    [e.target.name]: e.target.value,
+  });
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await sendMessage(form);
+
+    alert(res.data.message);
+
+    setForm({
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    });
+
+  } catch (error) {
+    alert(
+      error.response?.data?.message ||
+      "Failed to send message"
+    );
+  }
+};
 
   const contactInfo = [
     {
@@ -206,111 +243,128 @@ function Contact() {
         "
       >
 
-        <h2 className="text-3xl font-bold text-white mb-6">
-          Send Message
-        </h2>
+       <h2 className="text-3xl font-bold text-white mb-6">
+  Send Message
+</h2>
 
-        <form className="space-y-5">
+<form className="space-y-5" onSubmit={handleSubmit}>
 
-          <input
-            type="text"
-            placeholder="Your Name"
-            className="
-              w-full
-              bg-white/20
-              text-white
-              placeholder-gray-300
-              border
-              border-white/20
-              rounded-xl
-              px-5
-              py-4
-              outline-none
-              focus:ring-2
-              focus:ring-orange-400
-            "
-          />
+  <input
+    type="text"
+    name="name"
+    value={form.name}
+    onChange={handleChange}
+    placeholder="Your Name"
+    required
+    className="
+      w-full
+      bg-white/20
+      text-white
+      placeholder-gray-300
+      border
+      border-white/20
+      rounded-xl
+      px-5
+      py-4
+      outline-none
+      focus:ring-2
+      focus:ring-orange-400
+    "
+  />
 
-          <input
-            type="email"
-            placeholder="Email Address"
-            className="
-              w-full
-              bg-white/20
-              text-white
-              placeholder-gray-300
-              border
-              border-white/20
-              rounded-xl
-              px-5
-              py-4
-              outline-none
-              focus:ring-2
-              focus:ring-orange-400
-            "
-          />
+  <input
+    type="email"
+    name="email"
+    value={form.email}
+    onChange={handleChange}
+    placeholder="Email Address"
+    required
+    className="
+      w-full
+      bg-white/20
+      text-white
+      placeholder-gray-300
+      border
+      border-white/20
+      rounded-xl
+      px-5
+      py-4
+      outline-none
+      focus:ring-2
+      focus:ring-orange-400
+    "
+  />
 
-          <input
-            type="text"
-            placeholder="Subject"
-            className="
-              w-full
-              bg-white/20
-              text-white
-              placeholder-gray-300
-              border
-              border-white/20
-              rounded-xl
-              px-5
-              py-4
-              outline-none
-              focus:ring-2
-              focus:ring-orange-400
-            "
-          />
+  <input
+    type="text"
+    name="subject"
+    value={form.subject}
+    onChange={handleChange}
+    placeholder="Subject"
+    required
+    className="
+      w-full
+      bg-white/20
+      text-white
+      placeholder-gray-300
+      border
+      border-white/20
+      rounded-xl
+      px-5
+      py-4
+      outline-none
+      focus:ring-2
+      focus:ring-orange-400
+    "
+  />
 
-          <textarea
-            rows="5"
-            placeholder="Your Message"
-            className="
-              w-full
-              bg-white/20
-              text-white
-              placeholder-gray-300
-              border
-              border-white/20
-              rounded-xl
-              px-5
-              py-4
-              outline-none
-              focus:ring-2
-              focus:ring-orange-400
-            "
-          />
+  <textarea
+    rows="5"
+    name="message"
+    value={form.message}
+    onChange={handleChange}
+    placeholder="Your Message"
+    required
+    className="
+      w-full
+      bg-white/20
+      text-white
+      placeholder-gray-300
+      border
+      border-white/20
+      rounded-xl
+      px-5
+      py-4
+      outline-none
+      focus:ring-2
+      focus:ring-orange-400
+    "
+  />
 
-          <button
-            className="
-              w-full
-              bg-gradient-to-r
-              from-orange-500
-              to-amber-500
-              text-white
-              py-4
-              rounded-xl
-              font-semibold
-              flex
-              justify-center
-              items-center
-              gap-3
-              hover:scale-105
-              transition
-            "
-          >
-            Send Message
-            <FaPaperPlane />
-          </button>
+  <button
+    type="submit"
+    className="
+      w-full
+      bg-gradient-to-r
+      from-orange-500
+      to-amber-500
+      text-white
+      py-4
+      rounded-xl
+      font-semibold
+      flex
+      justify-center
+      items-center
+      gap-3
+      hover:scale-105
+      transition
+    "
+  >
+    Send Message
+    <FaPaperPlane />
+  </button>
 
-        </form>
+</form>
 
       </div>
 </AnimatedSection>
