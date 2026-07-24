@@ -184,119 +184,57 @@ setUploading(false);
 
 
 
-  const handleSubmit=async(e)=>{
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  try {
+    setLoading(true);
 
-    e.preventDefault();
-
-
-    try{
-
-
-      setLoading(true);
-
-
-
-      if(isEditMode){
-
-
-        await api.put(
-
-          `/products/${id}`,
-
-          form,
-
-          {
-            headers:{
-              Authorization:`Bearer ${token}`
-            }
-          }
-
-        );
-
-
-        alert(
-          "Product updated successfully!"
-        );
-
-
-      }else{
-
-
-        await api.post(
-
-          "/products",
-
-          form,
-
-          {
-            headers:{
-              Authorization:`Bearer ${token}`
-            }
-          }
-
-        );
-
-       
-
-      }
-     
-      if(isEditMode){
-
-    await api.put(
+    if (isEditMode) {
+      await api.put(
         `/products/${id}`,
         form,
         {
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-    );
+      );
 
+      alert("Product updated successfully!");
 
-    alert("Product updated successfully");
+    } else {
 
-
-}
-else{
-
-
-    await api.post(
+      await api.post(
         "/products",
         form,
         {
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-    );
-
-
-    alert("Product added successfully");
-
-}
-
-
-navigate("/seller/dashboard");
-
-    }catch(err){
-
-      console.log(err);
-
-
-      alert(
-        err.response?.data?.message ||
-        "Failed to save product"
       );
 
-    }finally{
-
-      setLoading(false);
-
+      alert("Product added successfully!");
     }
 
+    navigate("/seller/dashboard");
 
-  };
+  } catch (err) {
+
+    console.log(err);
+
+    alert(
+      err.response?.data?.message ||
+      "Failed to save product"
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
+};
 
   return (
 
