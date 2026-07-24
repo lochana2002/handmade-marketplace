@@ -28,13 +28,15 @@ const app = express();
 /* Middleware */
 
 const allowedOrigins = [
-    "http://localhost:5173",
-    "http://localhost:5174"
+  "http://localhost:5173",
+  "http://localhost:5174",
 ];
 
-if(process.env.CLIENT_URL){
-    allowedOrigins.push(process.env.CLIENT_URL);
+if (process.env.CLIENT_URL) {
+  allowedOrigins.push(process.env.CLIENT_URL);
 }
+
+console.log("Allowed Origins:", allowedOrigins);
 
 
 app.use(
